@@ -1,29 +1,33 @@
 #include <stdio.h>
 
-int WinnerState(void);
-void CurrentPlayer(void);
-void PrintWinner(void);
-void PrintDraw(void);
-void PrintBoard(void);
-void PrintFinalBoard(void);
-void MarkBoard(int In);
+// 'f' Function
+// "iv" Integer Variable
+// cv Chae Variable
 
-int CounterForDisplay = 0;
-int CounterForFunction = 0;
-int TurnCounter = 0;
-int TurnLimit = 9;
+int fWinnerState(void);
+void fCurrentPlayer(void);
+void fPrintWinner(void);
+void fPrintDraw(void);
+void fPrintBoard(void);
+void fPrintFinalBoard(void);
+void fMarkBoard(int In);
 
-char Mark[2] = {'O', 'X'};
-int MarkNumber = 0;
-int Input = 0;
+int ivCounterForDisplay = 0;
+int ivCounterForFunction = 0;
+int ivTurnCounter = 0;
+int ivTurnLimit = 9;
 
-char Board[9] = {
+char cvMark[2] = {'O', 'X'};
+int ivMarkNumber = 0;
+int ivInput = 0;
+
+char cvBoard[9] = {
 	'1', '2', '3',
 	'4', '5', '6',
 	'7', '8', '9'
 	};
 
-char FinalBoard[9] = {
+char cvFinalBoard[9] = {
 	' ', ' ', ' ',
 	' ', ' ', ' ',
 	' ', ' ', ' '
@@ -31,193 +35,193 @@ char FinalBoard[9] = {
 
 int main(void) {
 	printf("Tic Tac Toe\n");
-	for(TurnCounter = 0; TurnCounter < TurnLimit; TurnCounter++) {
-		CounterForFunction = (TurnCounter % 2);
-		CounterForDisplay = (CounterForFunction + 1);
-		if(WinnerState() > 0) {
-			PrintWinner();
-			PrintFinalBoard();
+	for(ivTurnCounter = 0; ivTurnCounter < ivTurnLimit; ivTurnCounter++) {
+		ivCounterForFunction = (ivTurnCounter % 2);
+		ivCounterForDisplay = (ivCounterForFunction + 1);
+		if(fWinnerState() > 0) {
+			fPrintWinner();
+			fPrintBoard();
+			fPrintFinalBoard();
 			return 0;
 			}
-		printf("Turn %i\n", (TurnCounter + 1));
-		PrintBoard();
-		CurrentPlayer();
+		printf("Turn %i\n", (ivTurnCounter + 1));
+		fPrintBoard();
+		fCurrentPlayer();
 		}
-	PrintDraw();
-	PrintFinalBoard();
+	fPrintDraw();
+	fPrintFinalBoard();
 	return 0;
 	} // End of Main
 
-int WinnerState(void) {
-	int Check = 0;
+int fWinnerState(void) {
+	int ivCheck = 0;
 		// Player1 Horizontal
-		if(Board[0] == 'O' && Board[1] == 'O' && Board[2] == 'O') {
-			FinalBoard[0] = '+';
-			FinalBoard[1] = '+';
-			FinalBoard[2] = '+';
-			Check = 1;
+		if(cvBoard[0] == 'O' && cvBoard[1] == 'O' && cvBoard[2] == 'O') {
+			cvFinalBoard[0] = '+';
+			cvFinalBoard[1] = '+';
+			cvFinalBoard[2] = '+';
+			ivCheck = 1;
 			}
-		else if(Board[3] == 'O' && Board[4] == 'O' && Board[5] == 'O') {
-			FinalBoard[3] = '+';
-			FinalBoard[4] = '+';
-			FinalBoard[5] = '+';
-			Check =  1;
+		else if(cvBoard[3] == 'O' && cvBoard[4] == 'O' && cvBoard[5] == 'O') {
+			cvFinalBoard[3] = '+';
+			cvFinalBoard[4] = '+';
+			cvFinalBoard[5] = '+';
+			ivCheck =  1;
 			}
-		else if(Board[6] == 'O' && Board[7] == 'O' && Board[8] == 'O') {
-			FinalBoard[6] = '+';
-			FinalBoard[7] = '+';
-			FinalBoard[8] = '+';
-			Check =  1;
+		else if(cvBoard[6] == 'O' && cvBoard[7] == 'O' && cvBoard[8] == 'O') {
+			cvFinalBoard[6] = '+';
+			cvFinalBoard[7] = '+';
+			cvFinalBoard[8] = '+';
+			ivCheck =  1;
 			}
 
 		// Player1 Vertical
-		else if(Board[0] == 'O' && Board[3] == 'O' && Board[6] == 'O') {
-			FinalBoard[0] = '+';
-			FinalBoard[3] = '+';
-			FinalBoard[6] = '+';
-			Check =  1;
+		else if(cvBoard[0] == 'O' && cvBoard[3] == 'O' && cvBoard[6] == 'O') {
+			cvFinalBoard[0] = '+';
+			cvFinalBoard[3] = '+';
+			cvFinalBoard[6] = '+';
+			ivCheck =  1;
 			}
-		else if(Board[1] == 'O' && Board[4] == 'O' && Board[7] == 'O') {
-			FinalBoard[1] = '+';
-			FinalBoard[4] = '+';
-			FinalBoard[7] = '+';
-			Check =  1;
+		else if(cvBoard[1] == 'O' && cvBoard[4] == 'O' && cvBoard[7] == 'O') {
+			cvFinalBoard[1] = '+';
+			cvFinalBoard[4] = '+';
+			cvFinalBoard[7] = '+';
+			ivCheck =  1;
 			}
-		else if(Board[2] == 'O' && Board[5] == 'O' && Board[8] == 'O') {
-			FinalBoard[2] = '+';
-			FinalBoard[5] = '+';
-			FinalBoard[8] = '+';
-			Check =  1;
+		else if(cvBoard[2] == 'O' && cvBoard[5] == 'O' && cvBoard[8] == 'O') {
+			cvFinalBoard[2] = '+';
+			cvFinalBoard[5] = '+';
+			cvFinalBoard[8] = '+';
+			ivCheck =  1;
 			}
 
 		//Player1 Diagonal
-		else if(Board[0] == 'O' && Board[4] == 'O' && Board[8] == 'O') {
-			FinalBoard[0] = '+';
-			FinalBoard[4] = '+';
-			FinalBoard[8] = '+';
-			Check =  1;
+		else if(cvBoard[0] == 'O' && cvBoard[4] == 'O' && cvBoard[8] == 'O') {
+			cvFinalBoard[0] = '+';
+			cvFinalBoard[4] = '+';
+			cvFinalBoard[8] = '+';
+			ivCheck =  1;
 			}
-		else if(Board[2] == 'O' && Board[4] == 'O' && Board[6] == 'O') {
-			FinalBoard[2] = '+';
-			FinalBoard[4] = '+';
-			FinalBoard[6] = '+';
-			Check =  1;
+		else if(cvBoard[2] == 'O' && cvBoard[4] == 'O' && cvBoard[6] == 'O') {
+			cvFinalBoard[2] = '+';
+			cvFinalBoard[4] = '+';
+			cvFinalBoard[6] = '+';
+			ivCheck =  1;
 			}
 
 		// Player2 Horizontal
-		else if(Board[0] == 'X' && Board[1] == 'X' && Board[2] == 'X') {
-			FinalBoard[0] = '+';
-			FinalBoard[1] = '+';
-			FinalBoard[2] = '+';
-			Check =  2;
+		else if(cvBoard[0] == 'X' && cvBoard[1] == 'X' && cvBoard[2] == 'X') {
+			cvFinalBoard[0] = '+';
+			cvFinalBoard[1] = '+';
+			cvFinalBoard[2] = '+';
+			ivCheck =  2;
 			}
-		else if(Board[3] == 'X' && Board[4] == 'X' && Board[5] == 'X') {
-			FinalBoard[3] = '+';
-			FinalBoard[4] = '+';
-			FinalBoard[5] = '+';
-			Check =  2;
+		else if(cvBoard[3] == 'X' && cvBoard[4] == 'X' && cvBoard[5] == 'X') {
+			cvFinalBoard[3] = '+';
+			cvFinalBoard[4] = '+';
+			cvFinalBoard[5] = '+';
+			ivCheck =  2;
 			}
-		else if(Board[6] == 'X' && Board[7] == 'X' && Board[8] == 'X') {
-			FinalBoard[6] = '+';
-			FinalBoard[7] = '+';
-			FinalBoard[8] = '+';
-			Check =  2;
+		else if(cvBoard[6] == 'X' && cvBoard[7] == 'X' && cvBoard[8] == 'X') {
+			cvFinalBoard[6] = '+';
+			cvFinalBoard[7] = '+';
+			cvFinalBoard[8] = '+';
+			ivCheck =  2;
 			}
 
 		// Player2 Vertical
-		else if(Board[0] == 'X' && Board[3] == 'X' && Board[6] == 'X') {
-			FinalBoard[0] = '+';
-			FinalBoard[3] = '+';
-			FinalBoard[6] = '+';
-			Check =  2;
+		else if(cvBoard[0] == 'X' && cvBoard[3] == 'X' && cvBoard[6] == 'X') {
+			cvFinalBoard[0] = '+';
+			cvFinalBoard[3] = '+';
+			cvFinalBoard[6] = '+';
+			ivCheck =  2;
 			}
-		else if(Board[1] == 'X' && Board[4] == 'X' && Board[7] == 'X') {
-			FinalBoard[1] = '+';
-			FinalBoard[4] = '+';
-			FinalBoard[7] = '+';
-			Check =  2;
+		else if(cvBoard[1] == 'X' && cvBoard[4] == 'X' && cvBoard[7] == 'X') {
+			cvFinalBoard[1] = '+';
+			cvFinalBoard[4] = '+';
+			cvFinalBoard[7] = '+';
+			ivCheck =  2;
 			}
-		else if(Board[2] == 'X' && Board[5] == 'X' && Board[8] == 'X') {
-			FinalBoard[2] = '+';
-			FinalBoard[5] = '+';
-			FinalBoard[8] = '+';
-			Check =  2;
+		else if(cvBoard[2] == 'X' && cvBoard[5] == 'X' && cvBoard[8] == 'X') {
+			cvFinalBoard[2] = '+';
+			cvFinalBoard[5] = '+';
+			cvFinalBoard[8] = '+';
+			ivCheck =  2;
 			}
 
 		// Player2 Diagonal
-		else if(Board[0] == 'X' && Board[4] == 'X' && Board[8] == 'X') {
-			FinalBoard[0] = '+';
-			FinalBoard[4] = '+';
-			FinalBoard[8] = '+';
-			Check =  2;
+		else if(cvBoard[0] == 'X' && cvBoard[4] == 'X' && cvBoard[8] == 'X') {
+			cvFinalBoard[0] = '+';
+			cvFinalBoard[4] = '+';
+			cvFinalBoard[8] = '+';
+			ivCheck =  2;
 			}
-		else if(Board[2] == 'X' && Board[4] == 'X' && Board[6] == 'X') {
-			FinalBoard[2] = '+';
-			FinalBoard[4] = '+';
-			FinalBoard[6] = '+';
-			Check =  2;
+		else if(cvBoard[2] == 'X' && cvBoard[4] == 'X' && cvBoard[6] == 'X') {
+			cvFinalBoard[2] = '+';
+			cvFinalBoard[4] = '+';
+			cvFinalBoard[6] = '+';
+			ivCheck =  2;
 			}
-	if(Check > 0) {
-		return Check;
+	if(ivCheck > 0) {
+		return ivCheck;
 		} else {
 		return 0;
 		}
 	} // End of CheckForWinner
 
-void CurrentPlayer(void) {
+void fCurrentPlayer(void) {
 	fflush(stdin);
-	printf("\nPlayer%i: ", CounterForDisplay);
-	scanf("%i", &Input);
-	if(Input >= 1 && Input <= 9 ) {
-		MarkNumber = CounterForFunction;
-		MarkBoard(Input);
+	printf("\nPlayer%i: ", ivCounterForDisplay);
+	scanf("%i", &ivInput);
+	if(ivInput >= 1 && ivInput <= 9 ) {
+		ivMarkNumber = ivCounterForFunction;
+		fMarkBoard(ivInput);
 		} else {
 		fflush(stdin);
 		printf("\nInvalid Input\n");
-		TurnCounter--;
+		ivTurnCounter--;
 		}
 	} // End of CurrentPlayer
 
-void PrintWinner(void) {
-	if(CounterForFunction == 0) {
+void fPrintWinner(void) {
+	if(ivCounterForFunction == 0) {
 		printf("\nPlayer2 Won!\n");
 		}
-	else if(CounterForFunction == 1) {
+	else if(ivCounterForFunction == 1) {
 		printf("\nPlayer1 Won!\n");
 		}
-	PrintBoard();
 	} // End of PrintWinner
 
-void PrintDraw(void) {
+void fPrintDraw(void) {
 	printf("\nIts a draw!\n");
-	PrintBoard();
+	fPrintBoard();
 	} // End of PrintDraw
 
-void PrintBoard(void) {
+void fPrintBoard(void) {
 	printf("\n");
-	printf("  %c | %c | %c\n", Board[0], Board[1], Board[2]);
+	printf("  %c | %c | %c\n", cvBoard[0], cvBoard[1], cvBoard[2]);
 	printf(" --- --- ---\n");
-	printf("  %c | %c | %c\n", Board[3], Board[4], Board[5]);
+	printf("  %c | %c | %c\n", cvBoard[3], cvBoard[4], cvBoard[5]);
 	printf(" --- --- ---\n");
-	printf("  %c | %c | %c\n", Board[6], Board[7], Board[8]);
+	printf("  %c | %c | %c\n", cvBoard[6], cvBoard[7], cvBoard[8]);
 	} // End of PrintBoard
 
-void PrintFinalBoard(void) {
+void fPrintFinalBoard(void) {
 	printf("\n");
-	printf("  %c | %c | %c\n", FinalBoard[0], FinalBoard[1], FinalBoard[2]);
+	printf("  %c | %c | %c\n", cvFinalBoard[0], cvFinalBoard[1], cvFinalBoard[2]);
 	printf(" --- --- ---\n");
-	printf("  %c | %c | %c\n", FinalBoard[3], FinalBoard[4], FinalBoard[5]);
+	printf("  %c | %c | %c\n", cvFinalBoard[3], cvFinalBoard[4], cvFinalBoard[5]);
 	printf(" --- --- ---\n");
-	printf("  %c | %c | %c\n", FinalBoard[6], FinalBoard[7], FinalBoard[8]);
+	printf("  %c | %c | %c\n", cvFinalBoard[6], cvFinalBoard[7], cvFinalBoard[8]);
 	} // End of PrintFinalBoard
 
-void MarkBoard(int In) {
-	if(Board[In - 1] == 'X' || Board[In - 1] == 'O') {
+void fMarkBoard(int In) {
+	if(cvBoard[In - 1] == 'X' || cvBoard[In - 1] == 'O') {
 		printf("\nInvalid Move\n");
-		TurnCounter--;
+		ivTurnCounter--;
 		}
 	else {
-		Board[In - 1] = Mark[MarkNumber];
+		cvBoard[In - 1] = cvMark[ivMarkNumber];
 		}
-	Input = 0;
+	ivInput = 0;
 	} // End of MarkBoard
