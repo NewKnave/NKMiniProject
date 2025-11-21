@@ -1,25 +1,19 @@
 #include <stdio.h>
 
-// 'f' Function
+// "f" Function
 // "iv" Integer Variable
-// cv Chae Variable
+// "cv" Char Variable
 
 int fWinnerState(void);
-void fCurrentPlayer(void);
-void fPrintWinner(void);
+int fCurrentPlayer(int ivIn);
+void fPrintWinner(int ivIn);
 void fPrintDraw(void);
 void fPrintBoard(void);
 void fPrintFinalBoard(void);
 void fMarkBoard(int In);
 
-int ivCounterForDisplay = 0;
-int ivCounterForFunction = 0;
-int ivTurnCounter = 0;
-int ivTurnLimit = 9;
-
 char cvMark[2] = {'O', 'X'};
 int ivMarkNumber = 0;
-int ivInput = 0;
 
 char cvBoard[9] = {
 	'1', '2', '3',
@@ -34,19 +28,29 @@ char cvFinalBoard[9] = {
 	};
 
 int main(void) {
+	int ivFunction = 0;
+	int ivTurnCounter = 0;
+	int ivTurnLimit = 9;
+	int ivIsValidMove = 0;
+
 	printf("Tic Tac Toe\n");
-	for(ivTurnCounter = 0; ivTurnCounter < ivTurnLimit; ivTurnCounter++) {
-		ivCounterForFunction = (ivTurnCounter % 2);
-		ivCounterForDisplay = (ivCounterForFunction + 1);
-		if(fWinnerState() > 0) {
-			fPrintWinner();
+	for(ivTurnCounter = 0; ivTurnCounter < ivTurnLimit; ivTurnCounter++)
+		{
+			ivFunction = (ivTurnCounter % 2);
+			if(fWinnerState() > 0)
+				{
+					fPrintWinner(ivFunction);
+					fPrintBoard();
+					fPrintFinalBoard();
+					return 0;
+				}
+			printf("\nTurn %i\n", (ivTurnCounter + 1));
 			fPrintBoard();
-			fPrintFinalBoard();
-			return 0;
-			}
-		printf("Turn %i\n", (ivTurnCounter + 1));
-		fPrintBoard();
-		fCurrentPlayer();
+			ivIsValidMove = fCurrentPlayer(ivFunction);
+			if(ivIsValidMove == 1)
+				{
+					ivTurnCounter--;
+				}
 		}
 	fPrintDraw();
 	fPrintFinalBoard();
@@ -164,30 +168,42 @@ int fWinnerState(void) {
 			}
 	if(ivCheck > 0) {
 		return ivCheck;
-		} else {
-		return 0;
 		}
+	return 0;
 	} // End of CheckForWinner
 
-void fCurrentPlayer(void) {
+int fCurrentPlayer(int ivIn) {
+	int ivPlayerInput = 0;
+	int ivMark;
+
 	fflush(stdin);
-	printf("\nPlayer%i: ", ivCounterForDisplay);
-	scanf("%i", &ivInput);
-	if(ivInput >= 1 && ivInput <= 9 ) {
-		ivMarkNumber = ivCounterForFunction;
-		fMarkBoard(ivInput);
-		} else {
-		fflush(stdin);
-		printf("\nInvalid Input\n");
-		ivTurnCounter--;
+	printf("\nPlayer%i: ", (ivIn + 1));
+	scanf("%i", &ivPlayerInput);
+	ivMark = (ivPlayerInput - 1);
+	if(ivPlayerInput >= 1 && ivPlayerInput <= 9 )
+		{
+			if(cvBoard[ivMark] == 'X' || cvBoard[ivMark] == 'O')
+				{
+					fflush(stdin);
+					printf("\nInvalid Move\n");
+					return 1;
+			} else {
+					ivMarkNumber = ivIn;
+					fMarkBoard(ivMark);
+					return 0;	 
+				}
+	} else {
+			fflush(stdin);
+			printf("\nInvalid Input\n");
+			return 1;
 		}
 	} // End of CurrentPlayer
 
-void fPrintWinner(void) {
-	if(ivCounterForFunction == 0) {
+void fPrintWinner(int ivIn) {
+	if(ivIn == 0) {
 		printf("\nPlayer2 Won!\n");
 		}
-	else if(ivCounterForFunction == 1) {
+	else if(ivIn == 1) {
 		printf("\nPlayer1 Won!\n");
 		}
 	} // End of PrintWinner
@@ -216,12 +232,5 @@ void fPrintFinalBoard(void) {
 	} // End of PrintFinalBoard
 
 void fMarkBoard(int In) {
-	if(cvBoard[In - 1] == 'X' || cvBoard[In - 1] == 'O') {
-		printf("\nInvalid Move\n");
-		ivTurnCounter--;
-		}
-	else {
-		cvBoard[In - 1] = cvMark[ivMarkNumber];
-		}
-	ivInput = 0;
+	cvBoard[In] = cvMark[ivMarkNumber];
 	} // End of MarkBoard
