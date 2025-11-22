@@ -1,3 +1,3 @@
 # NKMiniProject
 
-A public repository
+Project concepts. A public repository
