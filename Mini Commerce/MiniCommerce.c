@@ -1,14 +1,21 @@
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "libclient.c"
+#include "libprogram.c"
 
 int IsUnderMaintenance = false;
 
 int main(void)
 {
+	user = realloc(user, 1 * sizeof(user));
+	user[0].name = malloc(4 * sizeof(char));
+	char Test[5] = "test\0";
+	strcpy(user[0].name, Test);
+	user[0].password = malloc(8 * sizeof(char));
+	char code[9] = "12344568\0";
+	strcpy(user[0].password, code);
+	user[0].id = 10;
+
+	MiniCommerce(10);
+}
+/*
 	if(IsUnderMaintenance == true) {
 		printf("Service is currently unavailable\n");
 		return 0;
@@ -32,7 +39,9 @@ int main(void)
 		switch (Selection) {
 
 		case 1:
-			SignIn();
+			if(SignIn() == SUCCESS) {
+				MiniCommerce(ClientSession);
+			}
 			break;
 
 		case 2:
@@ -52,4 +61,4 @@ int main(void)
 	}
 
 	return 0;
-}
+}*/
