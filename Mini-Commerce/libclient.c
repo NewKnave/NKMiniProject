@@ -66,10 +66,7 @@ int SignInProcess(void)
 		HashCache[i] = ((PasswordInput[i] % 10) + '0');
 	}
 	HashCache[PasswordLenght] = '\0';
-printf("%s\n", HashCache);
-printf("%s\n", user[0].password);
-printf("%s\n", NameInput);
-printf("%s\n", user[0].name);
+
 	for(int i = 0; i < TotalClients; i++) {
 		if(strcmp(NameInput, user[i].name) == 0 && strcmp(HashCache, user[i].password) == 0) {
 			return user[i].id;
