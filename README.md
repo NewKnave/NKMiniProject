@@ -1,4 +1,4 @@
-# Mini Commerce
+# About Mini Commerce
 
 Terminal-base E-commerce
 
