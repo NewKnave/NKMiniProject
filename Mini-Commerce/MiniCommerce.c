@@ -8,8 +8,8 @@
 
 int IsUnderMaintenance = false;
 
-int main(void)
-{
+int main(void) {
+
 	if(IsUnderMaintenance == true) {
 		printf("Service is currently unavailable\n");
 		return 0;
@@ -34,7 +34,7 @@ int main(void)
 
 		case 1:
 			if(SignIn() == SUCCESS) {
-				MiniCommerce(ClientSession);
+				MiniCommerce();
 			}
 			break;
 

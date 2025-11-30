@@ -1,70 +1,38 @@
 #define SUCCESS 0
 #define FAILED 1
 
+#define CLIENT_MAX_NAME_LENGHT 64+1
+#define CLIENT_MAX_HASH_LENGHT 64
+#define CLIENT_MAX_ID_LENGHT 20+1
+
 int SignIn(void);
-int SignInProcess(void);
+void SignInProcess(void);
+
 void SignUp(void);
 int SignUpProcess(void);
 
-int SignIn(void)
-{
-	int ValidClientID = SignInProcess();
+int SignIn(void) {
 
-	if(ValidClientID >= 10) {
-		printf("\nWelcome user\n\n");
-		ClientSession = ValidClientID;
-		return SUCCESS;
-	}
-
-	else if(ValidClientID == 0) {
-		printf("\nSign in failed\n\n");
-		return FAILED;
-	}
-
-	else {
-		printf("\nSystem Error\n\n");
-		return FAILED;
-	}
+	return SUCCESS;
 }
 
-int SignInProcess(void)
-{
-	if(TotalClients == 0) {
-		printf("\nZero user had signed up");
-		return 0;
-	}
+void SignInProcess(void) {
 
-	char NameInput[64];
-	char PasswordInput[64];
-	int PasswordLenght;
-	char HashCache[64];
+	FILE *file_client;
 
-	printf("\nName: ");
-	fgets(NameInput, sizeof(NameInput), stdin);
-	NameInput[strcspn(NameInput, "\n")] = '\0';
+	typedef struct {
+		char name[CLIENT_MAX_NAME_LENGHT];
+		char hash[CLIENT_MAX_HASH_LENGHT];
+		char id[CLIENT_MAX_ID_LENGHT];
+	} ClientData;
 
-	printf("Password: ");
-	fgets(PasswordInput, sizeof(PasswordInput), stdin);
-	PasswordInput[strcspn(PasswordInput, "\n")] = '\0';
-	PasswordLenght = strlen(PasswordInput);
+	fclose(file_client);
 
-	for(int i = 0; i < PasswordLenght; i++) {
-		HashCache[i] = ((PasswordInput[i] % 10) + '0');
-	}
-	HashCache[PasswordLenght] = '\0';
-
-	for(int i = 0; i < TotalClients; i++) {
-		if(strcmp(NameInput, user[i].name) == 0 && strcmp(HashCache, user[i].password) == 0) {
-			return user[i].id;
-		}
-	}
-
-	printf("\nInvalid user name or password");
-	return 0;
+	return;
 }
 
-void SignUp(void)
-{
+void SignUp(void) {
+
 	int Validation = SignUpProcess();
 
 	if(Validation == SUCCESS) {
@@ -83,103 +51,95 @@ void SignUp(void)
 	}
 }
 
-int SignUpProcess(void)
-{
-	typedef struct {
-		char *name;
-		char *password;
-		char *id;
-	} ClientData;
+int SignUpProcess(void) {
 
-	ClientData *user;
+	char TEMP_NAME[CLIENT_MAX_NAME_LENGHT];
+	int TEMP_NAME_LENGHT = 0;
+
+	char TEMP_PASSWORD[CLIENT_MAX_HASH_LENGHT];
+	int TEMP_PASSWORD_LENGHT = 0;
+
+	char TEMP_HASH[CLIENT_MAX_HASH_LENGHT];
 
 	bool IsValidatingName = true;
 	bool IsValidatingPassword = true;
+
 	int ErrorCounter = 0;
 
-	int ClientIDCounter = 0;
+	printf("\nThis program is a concept,\n");
+	printf("so please do not use any real password\n");
+	printf("that you use to avoid potential leak,\n");
+	printf("and DO NOT use your real name please\n");
 
-	char NameInput[64];
-	int NameLenght = 0;
+	printf("\nPlease input a name\n");
+	printf("Minimum name lenght is 4 characters\n");
+	printf("Maximum name lenght is %i characters\n", (CLIENT_MAX_NAME_LENGHT - 1));
+	while(IsValidatingName == true) {
+		printf("Name: ");
+		fgets(TEMP_NAME, sizeof(TEMP_NAME), stdin);
+		TEMP_NAME[strcspn(TEMP_NAME, "\n")] = '\0';
+		TEMP_NAME_LENGHT = strlen(TEMP_NAME);
 
-	char PasswordInput[64];
-	int PasswordLenght = 0;
+		if(TEMP_NAME_LENGHT >= 4 && TEMP_NAME_LENGHT <= CLIENT_MAX_NAME_LENGHT) {
+			IsValidatingName = false;
+		}
 
-	user = realloc(user, sizeof(user));
-	if(user == NULL) {
-		printf("System error - LC1 - Memory allocation failure\n");
+		else if(ErrorCounter == 2) {
+			printf("Too many errors, exiting\n\n");
+			return FAILED;
+		}
+
+		else {
+			printf("Invalid name\n\n");
+			ErrorCounter++;
+		}
+	}
+
+	// To reset the error counter
+	ErrorCounter = 0;
+
+	printf("\nPlease input a password\n");
+	printf("Minimum password lenght is 8 characters\n");
+	printf("Maximum password lenght is %i characters\n", CLIENT_MAX_HASH_LENGHT);
+	while(IsValidatingPassword == true) {
+		printf("Password: ");
+		fgets(TEMP_PASSWORD, sizeof(TEMP_PASSWORD), stdin);
+		TEMP_PASSWORD[strcspn(TEMP_PASSWORD, "\n")] = '\0';
+		TEMP_PASSWORD_LENGHT = strlen(TEMP_PASSWORD);
+
+		if(TEMP_PASSWORD_LENGHT >= 8 && TEMP_PASSWORD_LENGHT <= CLIENT_MAX_HASH_LENGHT) {
+			IsValidatingPassword = false;
+		}
+
+		else if(ErrorCounter == 2) {
+			printf("Too many errors, exiting\n\n");
+			return FAILED;
+		}
+
+		else {
+			printf("Invalid password\n\n");
+			ErrorCounter++;
+		}
+	}
+
+	FILE *file_client;
+
+	file_client = fopen("data_client.dat", "a");
+
+	if(file_client == NULL) {
+		printf("\nSystem Error\n\n");
 		return FAILED;
 	}
 
-	printf("\nPlease do not use your real name\n");
-	printf("Minimum name lenght is 4\n");
-	printf("Maximum name lenght is 64\n");
-	while(IsValidatingName == true) {
-		printf("\nEnter name: ");
-		fgets(NameInput, sizeof(NameInput), stdin);
-		NameInput[strcspn(NameInput, "\n")] = '\0';
-		NameLenght = strlen(NameInput);
+	typedef struct {
+		char name[CLIENT_MAX_NAME_LENGHT];
+		char hash[CLIENT_MAX_HASH_LENGHT];
+		char id[CLIENT_MAX_ID_LENGHT];
+	} ClientData;
 
-		if(NameLenght >= 4 && NameLenght <= 64) {
-			ErrorCounter = 0;
-			IsValidatingName = false;
+	ClientData *NewClient;
 
-			user[ArrayLocation].name = malloc(NameLenght * sizeof(char));
-
-			if(user[ArrayLocation].name == NULL) {
-				printf("System error - LC2 - Memory allocation failure\n");
-				return FAILED;
-			}
-
-			else {
-				strcpy(user[ArrayLocation].name, NameInput);
-			}
-		}
-
-		else if(ErrorCounter == 2) {
-			printf("Too many errors, exiting\n");
-			return FAILED;
-		}
-
-		else {
-			printf("Invalid name, please try again\n");
-			ErrorCounter++;
-		}
-	}
-
-	printf("\nMinimum password lenght is 8\n");
-	printf("Maximum password lenght is 64\n\n");
-	while(IsValidatingPassword == true) {
-		printf("Password: ");
-		fgets(PasswordInput, sizeof(PasswordInput), stdin);
-		PasswordInput[strcspn(PasswordInput, "\n")] = '\0';
-		PasswordLenght = strlen(PasswordInput);
-
-		if(PasswordLenght >= 8 && PasswordLenght <= 64) {
-			IsValidatingPassword = false;
-
-			user[ArrayLocation].password = malloc(PasswordLenght * sizeof(char));
-
-			if(user[ArrayLocation].password == NULL) {
-				printf("System error - LC3 - Memory allocation failure\n");
-				return FAILED;
-			}
-
-			else {
-			
-			}
-		}
-
-		else if(ErrorCounter == 2) {
-			printf("Too many errors, exiting\n");
-			return FAILED;
-		}
-
-		else {
-			printf("Invalid password, please try again\n\n");
-			ErrorCounter++;
-		}
-	}
+	fclose(file_client);
 
 	return SUCCESS;
 }
