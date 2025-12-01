@@ -1,5 +1,5 @@
-#define COMMERCE_MAX_ID_LENGHT 20+1
-#define COMMERCE_MAX_NAME_LENGHT 64+1
+const int COMMERCE_MAX_ID_LENGHT = (20 + 1);
+const int COMMERCE_MAX_NAME_LENGHT = (64 + 1);
 
 void MiniCommerce(void);
 void Profile(void);
@@ -29,7 +29,7 @@ void MiniCommerce(void) {
 		switch (Selection) {
 
 		case 1:
-			Profile();;
+			Profile();
 			break;
 
 		case 2:
@@ -83,10 +83,15 @@ void Buy(void) {
 
 void Sell(void) {
 
+	int TEMP_ID;
+	char TEMP_NAME[COMMERCE_MAX_NAME_LENGHT];
+	float TEMP_PRICE;
+	int TEMP_QUANTITY;
+
 	FILE *file_product;
 
 	typedef struct {
-		char id[COMMERCE_MAX_ID_LENGHT];
+		int id[COMMERCE_MAX_ID_LENGHT];
 		char name[COMMERCE_MAX_NAME_LENGHT];
 		float price;
 		int quantity;

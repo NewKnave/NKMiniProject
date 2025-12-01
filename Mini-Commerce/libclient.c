@@ -1,17 +1,20 @@
 #define SUCCESS 0
 #define FAILED 1
 
-#define CLIENT_MAX_NAME_LENGHT 64+1
-#define CLIENT_MAX_HASH_LENGHT 64
-#define CLIENT_MAX_ID_LENGHT 20+1
+const int CLIENT_MAX_NAME_LENGHT = (64 + 1);
+const int CLIENT_MAX_HASH_LENGHT = (64 + 1);
+const int CLIENT_MAX_ID_LENGHT = (20 + 1);
 
-int SignIn(void);
+int CurrentClientSession(void);
+int SignInValidation(void);
 void SignInProcess(void);
 
 void SignUp(void);
 int SignUpProcess(void);
 
-int SignIn(void) {
+int SignInValidation(void) {
+
+	SignInProcess();
 
 	return SUCCESS;
 }
@@ -20,11 +23,32 @@ void SignInProcess(void) {
 
 	FILE *file_client;
 
+	file_client = fopen("data_client", "r");
+
+	if(file_client == NULL) {
+		printf("\nNo data\n\n");
+		fclose(file_client);
+		return;
+	}
+
 	typedef struct {
 		char name[CLIENT_MAX_NAME_LENGHT];
 		char hash[CLIENT_MAX_HASH_LENGHT];
 		char id[CLIENT_MAX_ID_LENGHT];
 	} ClientData;
+
+	ClientData client[1];
+
+	char FETCH_NAME[CLIENT_MAX_NAME_LENGHT];
+	char FETCH_HASH[CLIENT_MAX_HASH_LENGHT];
+
+	printf("Name: ");
+	fgets(FETCH_NAME, sizeof(FETCH_NAME), stdin);
+	FETCH_NAME[strcspn(FETCH_NAME, "\n")] = '\0';
+
+	printf("Password: ");
+	fgets(FETCH_HASH, sizeof(FETCH_HASH), stdin);
+	FETCH_HASH[strcspn(FETCH_HASH, "\n")] = '\0';
 
 	fclose(file_client);
 
@@ -67,7 +91,7 @@ int SignUpProcess(void) {
 	int ErrorCounter = 0;
 
 	printf("\nThis program is a concept,\n");
-	printf("so please do not use any real password\n");
+	printf("so please do not input any password\n");
 	printf("that you use to avoid potential leak,\n");
 	printf("and DO NOT use your real name please\n");
 
@@ -137,7 +161,14 @@ int SignUpProcess(void) {
 		char id[CLIENT_MAX_ID_LENGHT];
 	} ClientData;
 
-	ClientData *NewClient;
+	ClientData client[1];
+
+	strcpy(client[0].name, TEMP_NAME);
+
+	strcpy(client[0].hash, TEMP_HASH);
+
+	int ClientID;
+	fread(client[0].id, sizeof(char), 1, file_client);
 
 	fclose(file_client);
 
