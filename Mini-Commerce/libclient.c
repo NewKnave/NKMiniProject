@@ -75,102 +75,108 @@ void SignUp(void) {
 	}
 }
 
+void SimpleHash(const char *input, char *output, int out_len) {
+    unsigned long hash = 5381;
+    int c;
+    while ((c = *input++))
+        hash = ((hash << 5) + hash) + c; // hash * 33 + c
+
+    // Convert hash to hex string
+    snprintf(output, out_len, "%lx", hash);
+}
+
 int SignUpProcess(void) {
 
-	char TEMP_NAME[CLIENT_MAX_NAME_LENGHT];
-	int TEMP_NAME_LENGHT = 0;
+    char TEMP_NAME[CLIENT_MAX_NAME_LENGHT];
+    int TEMP_NAME_LENGHT = 0;
 
-	char TEMP_PASSWORD[CLIENT_MAX_HASH_LENGHT];
-	int TEMP_PASSWORD_LENGHT = 0;
+    char TEMP_PASSWORD[CLIENT_MAX_HASH_LENGHT];
+    int TEMP_PASSWORD_LENGHT = 0;
 
-	char TEMP_HASH[CLIENT_MAX_HASH_LENGHT];
+    char TEMP_HASH[CLIENT_MAX_HASH_LENGHT];
 
-	bool IsValidatingName = true;
-	bool IsValidatingPassword = true;
+    bool IsValidatingName = true;
+    bool IsValidatingPassword = true;
 
-	int ErrorCounter = 0;
+    int ErrorCounter = 0;
 
-	printf("\nThis program is a concept,\n");
-	printf("so please do not input any password\n");
-	printf("that you use to avoid potential leak,\n");
-	printf("and DO NOT use your real name please\n");
+    printf("\nThis program is a concept,\n");
+    printf("so please do not input any password\n");
+    printf("that you use to avoid potential leak,\n");
+    printf("and DO NOT use your real name please\n");
 
-	printf("\nPlease input a name\n");
-	printf("Minimum name lenght is 4 characters\n");
-	printf("Maximum name lenght is %i characters\n", (CLIENT_MAX_NAME_LENGHT - 1));
-	while(IsValidatingName == true) {
-		printf("Name: ");
-		fgets(TEMP_NAME, sizeof(TEMP_NAME), stdin);
-		TEMP_NAME[strcspn(TEMP_NAME, "\n")] = '\0';
-		TEMP_NAME_LENGHT = strlen(TEMP_NAME);
+    printf("\nPlease input a name\n");
+    printf("Minimum name lenght is 4 characters\n");
+    printf("Maximum name lenght is %i characters\n", (CLIENT_MAX_NAME_LENGHT - 1));
+    while(IsValidatingName == true) {
+        printf("Name: ");
+        fgets(TEMP_NAME, sizeof(TEMP_NAME), stdin);
+        TEMP_NAME[strcspn(TEMP_NAME, "\n")] = '\0';
+        TEMP_NAME_LENGHT = strlen(TEMP_NAME);
 
-		if(TEMP_NAME_LENGHT >= 4 && TEMP_NAME_LENGHT <= CLIENT_MAX_NAME_LENGHT) {
-			IsValidatingName = false;
-		}
+        if(TEMP_NAME_LENGHT >= 4 && TEMP_NAME_LENGHT <= (CLIENT_MAX_NAME_LENGHT - 1)) {
+            IsValidatingName = false;
+        }
+        else if(ErrorCounter == 2) {
+            printf("Too many errors, exiting\n\n");
+            return FAILED;
+        }
+        else {
+            printf("Invalid name\n\n");
+            ErrorCounter++;
+        }
+    }
 
-		else if(ErrorCounter == 2) {
-			printf("Too many errors, exiting\n\n");
-			return FAILED;
-		}
+	// Resetting the error counter to be reuse in the password
+    ErrorCounter = 0;
 
-		else {
-			printf("Invalid name\n\n");
-			ErrorCounter++;
-		}
-	}
+    printf("\nPlease input a password\n");
+    printf("Minimum password lenght is 8 characters\n");
+    printf("Maximum password lenght is %i characters\n", (CLIENT_MAX_HASH_LENGHT - 1));
+    while(IsValidatingPassword == true) {
+        printf("Password: ");
+        fgets(TEMP_PASSWORD, sizeof(TEMP_PASSWORD), stdin);
+        TEMP_PASSWORD[strcspn(TEMP_PASSWORD, "\n")] = '\0';
+        TEMP_PASSWORD_LENGHT = strlen(TEMP_PASSWORD);
 
-	// To reset the error counter
-	ErrorCounter = 0;
+        if(TEMP_PASSWORD_LENGHT >= 8 && TEMP_PASSWORD_LENGHT <= (CLIENT_MAX_HASH_LENGHT - 1)) {
+            IsValidatingPassword = false;
+        }
+        else if(ErrorCounter == 2) {
+            printf("Too many errors, exiting\n\n");
+            return FAILED;
+        }
+        else {
+            printf("Invalid password\n\n");
+            ErrorCounter++;
+        }
+    }
 
-	printf("\nPlease input a password\n");
-	printf("Minimum password lenght is 8 characters\n");
-	printf("Maximum password lenght is %i characters\n", CLIENT_MAX_HASH_LENGHT);
-	while(IsValidatingPassword == true) {
-		printf("Password: ");
-		fgets(TEMP_PASSWORD, sizeof(TEMP_PASSWORD), stdin);
-		TEMP_PASSWORD[strcspn(TEMP_PASSWORD, "\n")] = '\0';
-		TEMP_PASSWORD_LENGHT = strlen(TEMP_PASSWORD);
+    // Calculate the hash from scratch
+    SimpleHash(TEMP_PASSWORD, TEMP_HASH, CLIENT_MAX_HASH_LENGHT);
 
-		if(TEMP_PASSWORD_LENGHT >= 8 && TEMP_PASSWORD_LENGHT <= CLIENT_MAX_HASH_LENGHT) {
-			IsValidatingPassword = false;
-		}
+    FILE *file_client = fopen("data_client.dat", "ab");
+    if(file_client == NULL) {
+        printf("\nSystem Error\n\n");
+        return FAILED;
+    }
 
-		else if(ErrorCounter == 2) {
-			printf("Too many errors, exiting\n\n");
-			return FAILED;
-		}
+    typedef struct {
+        char name[CLIENT_MAX_NAME_LENGHT];
+        char hash[CLIENT_MAX_HASH_LENGHT];
+        char id[CLIENT_MAX_ID_LENGHT];
+    } ClientData;
 
-		else {
-			printf("Invalid password\n\n");
-			ErrorCounter++;
-		}
-	}
+    ClientData client;
 
-	FILE *file_client;
+    strcpy(client.name, TEMP_NAME);
+    strcpy(client.hash, TEMP_HASH);
 
-	file_client = fopen("data_client.dat", "a");
+    snprintf(client.id, CLIENT_MAX_ID_LENGHT, "C%ld", time(NULL));
 
-	if(file_client == NULL) {
-		printf("\nSystem Error\n\n");
-		return FAILED;
-	}
+    fwrite(&client, sizeof(ClientData), 1, file_client);
 
-	typedef struct {
-		char name[CLIENT_MAX_NAME_LENGHT];
-		char hash[CLIENT_MAX_HASH_LENGHT];
-		char id[CLIENT_MAX_ID_LENGHT];
-	} ClientData;
+    fclose(file_client);
 
-	ClientData client[1];
-
-	strcpy(client[0].name, TEMP_NAME);
-
-	strcpy(client[0].hash, TEMP_HASH);
-
-	int ClientID;
-	fread(client[0].id, sizeof(char), 1, file_client);
-
-	fclose(file_client);
-
-	return SUCCESS;
+    return SUCCESS;
 }
